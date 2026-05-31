@@ -5,7 +5,6 @@ from mail_app.classifier import MailClassifier
 from mail_app.reader import MailReader
 
 class MailProcessor:
-
     def __init__(self, inbox_dir, output_dir, reports_dir, dry_run = False):
         self.inbox_dir = inbox_dir
         self.output_dir = output_dir
@@ -29,7 +28,7 @@ class MailProcessor:
             if path.is_file():
                 files.append(path)
 
-        logging.info("Found %s files in %s", len(files), self.inbox_dir)
+        logging.info("Найдено %s файлов в %s", len(files), self.inbox_dir)
 
         for path in files:
             self._process_file(path)
@@ -46,29 +45,29 @@ class MailProcessor:
     def _prepare_dirs(self):
         self.output_dir.mkdir(parents = True, exist_ok = True)
         self.reports_dir.mkdir(parents = True, exist_ok = True)
-        (self.output_dir / "problem_files").mkdir(parents = True, exist_ok = True)
+        (self.output_dir / "Ошибочные файлы").mkdir(parents = True, exist_ok = True)
 
     def _setup_logging(self):
         log_path = self.reports_dir / "processing.log"
 
         logging.basicConfig(
-            filename=log_path,
-            level=logging.INFO,
-            format="%(asctime)s %(levelname)s: %(message)s",
-            force=True,
+            filename = log_path,
+            level = logging.INFO,
+            format = "%(asctime)s %(levelname)s: %(message)s",
+            force = True,
         )
 
     def _process_file(self, path):
         try:
             mail = self.reader.read(path)
             category = self.classifier.classify(mail)
-            reason = "classified"
+            reason = "Письмо обработано"
 
         except Exception as error:
-            category = "problem_files"
+            category = "Ошибочные файлы"
             reason = str(error)
 
-            logging.warning("Problem with %s: %s", path.name, error)
+            logging.warning("Проблема с файлом %s: %s", path.name, error)
 
         if category not in self.stats:
             self.stats[category] = 0
@@ -86,7 +85,7 @@ class MailProcessor:
         )
 
         if not self.dry_run:
-            target.parent.mkdir(parent = True, exist_ok = True)
+            target.parent.mkdir(parents = True, exist_ok = True)
 
             shutil.move(str(path), str(target))
 
@@ -123,11 +122,11 @@ class MailProcessor:
         actions_path = self.reports_dir / "actions.txt"
 
         lines = [
-            "Mail processing summary",
-            f"Total files: {result['total_files']}",
+            "Итог обработки писем",
+            f"Всего файлов: {result['total_files']}",
             f"Dry run: {result['dry_run']}",
             "",
-            "Categories:",
+            "Категории:",
         ]
 
         for category, count in result["categories"].items():
@@ -135,7 +134,7 @@ class MailProcessor:
 
         summary_path.write_text("\n".join(lines) + "\n", encoding = "utf-8")
 
-        action_lines = ["File processing details:"]
+        action_lines = ["Результаты обработки файлов:"]
         for action in self.actions:
             line = f"{action['file']} -> {action['category']} ({action['reason']})"
             action_lines.append(line)
