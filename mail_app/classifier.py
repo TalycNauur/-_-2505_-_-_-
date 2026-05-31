@@ -1,6 +1,6 @@
 class MailClassifier:
-    RULES = [
-        ("spam",
+    cats = [
+        ("Спам",
 
             [
                 "вы выиграли",
@@ -17,7 +17,7 @@ class MailClassifier:
 
         ),
 
-        ("critical_incidents",
+        ("Критичные моменты",
          
             [
                 "критич",
@@ -37,7 +37,7 @@ class MailClassifier:
 
         ),
 
-        ("access_requests",
+        ("Запросы",
          
             [
                 "запрос доступа",
@@ -54,7 +54,7 @@ class MailClassifier:
 
         ),
 
-        ("hardware",
+        ("Аппаратура",
          
             [
                 "принтер",
@@ -69,7 +69,7 @@ class MailClassifier:
 
         ),
 
-        ("software_support",
+        ("Поддержка ПО",
          
             [
                 "chrome",
@@ -85,7 +85,7 @@ class MailClassifier:
 
         ),
 
-        ("documents_finance",
+        ("Документы",
          
             [
                 "договор",
@@ -101,7 +101,7 @@ class MailClassifier:
 
         ),
 
-        ("hr_admin",
+        ("Эйчар",
          
             [
                 "отпуск",
@@ -113,7 +113,7 @@ class MailClassifier:
 
         ),
 
-        ("client_requests",
+        ("Заявки клиентов",
          
             [
                 "клиент",
@@ -127,7 +127,7 @@ class MailClassifier:
 
         ),
 
-        ("info_news",
+        ("Информация",
          
             [
                 "дайджест",
@@ -145,9 +145,9 @@ class MailClassifier:
     def classify(self, mail):
         text = mail.text.lower()
 
-        for category, keywords in self.RULES:
+        for category, keywords in self.cats:
             for keyword in keywords:
                 if keyword in text:
                     return category
 
-        return "other"
+        return "Другое"
