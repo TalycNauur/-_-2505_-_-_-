@@ -1,5 +1,4 @@
 class MailMessage:
-
     def __init__(self, path, text):
         self.path = path
         self.text = text
